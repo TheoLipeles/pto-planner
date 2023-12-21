@@ -59,6 +59,17 @@ export default function Calendar(props: CalendarProps) {
     return "#fff";
   };
 
+  const getDisplaySlotDayNumber = (slotIdx: number) => {
+    const slotDayNumber = getSlotDayNumber(slotIdx);
+    if (slotDayNumber != -1) return slotDayNumber;
+    if (slotIdx > endIndex) return slotIdx - endIndex;
+    const lastMonthIdx = (month + 12 - 1) % 12;
+    const lastMonthIsLastYear = month == 11;
+    const lastMonthYearIdx = year - Number(lastMonthIsLastYear);
+    const daysInLastMonth = getNumDaysInMonth(lastMonthYearIdx, lastMonthIdx);
+    return daysInLastMonth - (startIndex - slotIdx) + 1;
+  };
+
   const columnSpacing = 1;
   const columnWidth = "5rem";
 
@@ -87,7 +98,7 @@ export default function Calendar(props: CalendarProps) {
                   backgroundColor: getSlotColor(day),
                 }}
               >
-                {showSlotIndex && `${day} | `} {getSlotDayNumber(day)}
+                {showSlotIndex && `${day} | `} {getDisplaySlotDayNumber(day)}
               </Card>
             ))}
           </Stack>
